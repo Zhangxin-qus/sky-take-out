@@ -1,6 +1,7 @@
 package com.sky.interceptor;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
 import com.sky.properties.JwtProperties;
 import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -48,6 +49,11 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：", empId);
             //3、通过，放行
+
+            // token通过后将其id放在ThreadLocal中存储起来，后续存储数据时将这动态id存入数据库对应字段
+            BaseContext.setCurrentId(empId);
+            // 使用工具类，已经将ThreadLocal及其对应的方法封装好了，避免在项目中到处手动声明 ThreadLocal 实例
+
             return true;
         } catch (Exception ex) {
             //4、不通过，响应401状态码
