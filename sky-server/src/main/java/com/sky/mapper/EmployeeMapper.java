@@ -36,5 +36,17 @@ public interface EmployeeMapper {
     // 要使用到动态sql，所以使用xml映射文件的方式
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
+    /**
+     * 更新用户数据
+     * @param employee
+     */
     void update(Employee employee);
+
+    /**
+     * 根据id查询用户
+     * @param id
+     * @return
+     */
+    @Select("select * from sky_take_out.employee where id = #{id}")
+    Employee getById(Long id);
 }
