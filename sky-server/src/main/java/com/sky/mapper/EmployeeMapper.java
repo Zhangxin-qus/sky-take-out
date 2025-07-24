@@ -35,4 +35,6 @@ public interface EmployeeMapper {
      */
     // 要使用到动态sql，所以使用xml映射文件的方式
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    void update(Employee employee);
 }
