@@ -17,4 +17,5 @@
             #{dishId}
         </foreach>
     </delete>
+
 </mapper>

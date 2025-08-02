@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -114,5 +115,69 @@ public class DishServiceImpl implements DishService {
         // 删除菜品关联的口味数据
         dishFlavorMapper.deleteDishIds(ids);
 
+    }
+
+    /**
+     * 根据id查询菜品和对应的口味数据
+     * @param id
+     * @return
+     */
+    @Override
+    public DishVO getByIdWithFlavor(Long id) {
+        // 根据id查询菜品数据
+        Dish dish = dishMapper.getById(id);
+
+        // 根据菜品id查询口味数据(可能对应有多条口味)
+        List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
+
+        // 将查询到数据封装到VO
+        DishVO dishVO = new DishVO();
+        // 使用对象拷贝
+        BeanUtils.copyProperties(dish, dishVO);
+        // 再设置口味数据
+        dishVO.setFlavors(dishFlavors);
+
+        return dishVO;
+    }
+
+    /**
+     * 根据id修改菜品基本信息和对应的口味信息
+     * @param dishDTO
+     */
+    @Override
+    public void update(DishDTO dishDTO) {
+        // 修改菜品表数据
+        // 转为entity实体类型，用于公共字段填充
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+        dishMapper.update(dish);
+
+        // 修改菜品对应的口味
+        // 先将之前菜品id对应的口味删除       创建一个只包含一个元素的不可变 List（单元素列表）
+        dishFlavorMapper.deleteDishIds(Collections.singletonList(dishDTO.getId()));
+
+        // 再插入新的口味列表
+        // 获取name和value
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        // 判断是否为空，不为空，批量插入口味
+        if (flavors != null && !flavors.isEmpty()) {
+            // 不为空后先将dishId插入列表中各个对象，用于后续的批量添加口味
+            for (DishFlavor f : flavors) {
+                f.setDishId(dishDTO.getId());
+            }
+            // 批量插入口味
+            dishFlavorMapper.insertBatch(flavors);
+        }
+
+    }
+
+    /**
+     * 启用禁用菜品
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        dishMapper.startOrStop(status, id);
     }
 }
