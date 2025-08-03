@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -92,6 +93,7 @@ public class DishServiceImpl implements DishService {
      * @param ids
      */
     @Override
+    @Transactional
     public void deleteBatch(List<Long> ids) {
         // 判断当前菜品能否删除--是否在起售中的
         Integer count = dishMapper.countByIdsAndStatus(ids);
@@ -145,6 +147,7 @@ public class DishServiceImpl implements DishService {
      * @param dishDTO
      */
     @Override
+    @Transactional
     public void update(DishDTO dishDTO) {
         // 修改菜品表数据
         // 转为entity实体类型，用于公共字段填充
@@ -179,5 +182,23 @@ public class DishServiceImpl implements DishService {
     @Override
     public void startOrStop(Integer status, Long id) {
         dishMapper.startOrStop(status, id);
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> list(Long categoryId) {
+        // 欲获取对应分类菜品，得查询对应的分类id和判断其是否启用：1
+        Dish dish = new Dish().builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+
+        List<Dish> dishList = dishMapper.list(dish);
+
+        return dishList;
     }
 }

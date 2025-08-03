@@ -72,4 +72,11 @@ public interface DishMapper {
      */
     @Update("update sky_take_out.dish set status = #{status} where id = #{id}")
     void startOrStop(Integer status, Long id);
+
+    /**
+     * 根据菜品id查询对应的口味
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
 }
