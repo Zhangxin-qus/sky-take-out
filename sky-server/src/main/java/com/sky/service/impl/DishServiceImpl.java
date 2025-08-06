@@ -81,7 +81,7 @@ public class DishServiceImpl implements DishService {
         // 使用pageHelper分页查询
         PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
 
-        // 接收返回值
+        // 接收返回值  需要使用到DishVO的categoryName属性
         Page<DishVO> page = dishMapper.pageQuery(dishPageQueryDTO);
 
         // 返回PageResult对象
