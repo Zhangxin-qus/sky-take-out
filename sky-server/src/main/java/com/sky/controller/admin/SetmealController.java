@@ -50,8 +50,33 @@ public class SetmealController {
         return Result.success(pageResult);
     }
 
-    public Result deleteSetmeal(@RequestParam("id") Integer id) {
-        return null;
+    /**
+     * 批量删除套餐
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("批量删除套餐")
+    // RequestParam springMVC框架动态解析字符串集合
+    public Result delete(@RequestParam List<Long> ids) {
+        log.info("批量删除套餐：{}", ids);
+        setmealService.delete(ids);
+        return Result.success();
+    }
+
+    /**
+     * 启售停售套餐
+     * @param status
+     * @return
+     */
+    @PostMapping("//status/{status}")
+    @ApiOperation("启售停售套餐")
+    //                                                       使用setmealId获取请求参数中的 id
+    public Result startOrStop(@PathVariable Integer status, @RequestParam("id") Long setmealId){
+        log.info("启售停售套餐：{}，id：{}", status, setmealId);
+        setmealService.startOrStop(status, setmealId);
+
+        return Result.success();
     }
 
 }

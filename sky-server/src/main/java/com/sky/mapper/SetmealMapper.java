@@ -9,6 +9,8 @@ import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface SetmealMapper {
 
@@ -33,4 +35,17 @@ public interface SetmealMapper {
      * @return
      */
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 批量删除套餐
+     * @param ids
+     */
+    void deleteByIds(List<Long> ids);
+
+    /**
+     * 获取起售数
+     * @param ids
+     */
+    @Select("select count(*) from sky_take_out.setmeal where status = 1")
+    Integer countByIdsAndStatus(List<Long> ids);
 }
