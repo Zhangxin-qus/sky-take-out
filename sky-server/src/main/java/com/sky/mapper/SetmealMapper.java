@@ -8,6 +8,7 @@ import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -48,4 +49,28 @@ public interface SetmealMapper {
      */
     @Select("select count(*) from sky_take_out.setmeal where status = 1")
     Integer countByIdsAndStatus(List<Long> ids);
+
+    /**
+     * 根据id查询套餐
+     * @param id
+     * @return
+     */
+    @Select("select id, category_id, name, price, status, description, image, create_time, update_time, create_user, update_user " +
+            "from sky_take_out.setmeal where id = #{id}")
+    Setmeal getById(Long id);
+
+    /**
+     * 启售停售套餐
+     * @param status
+     */
+    @Update("update sky_take_out.setmeal set status = #{status} where id = #{setmealId}")
+    void startOrStop(Integer status, Long setmealId);
+
+    /**
+     * 修改套餐
+     * @param setmeal
+     */
+    @AutoFill(OperationType.UPDATE)
+    void update(Setmeal setmeal);
+
 }

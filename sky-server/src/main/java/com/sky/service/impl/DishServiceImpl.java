@@ -8,10 +8,12 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -36,6 +38,9 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -181,7 +186,24 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public void startOrStop(Integer status, Long id) {
+        // 菜品停售，则包含菜品的套餐同时停售
         dishMapper.startOrStop(status, id);
+
+        // 如果为停售菜品
+        if (StatusConstant.DISABLE == status) {
+            // 则需要停售对应的套餐
+
+            // 先通过菜品id在setmeal_dish表中获取对应的套餐id；一个菜品可能存在于多个套餐中
+            List<Long> SetmealIds = setmealDishMapper.getByDishId(id);
+
+            if (SetmealIds != null && SetmealIds.size() > 0) {
+                // 遍历套餐id列表，继续批量修改
+                for (Long setmealId : SetmealIds) {
+                    setmealMapper.startOrStop(status, setmealId);
+                }
+            }
+        }
+
     }
 
     /**
