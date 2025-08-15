@@ -12,3 +12,9 @@ sky:
     access-key-id: ${OSS_ACCESS_KEY_ID}
     access-key-secret: ${OSS_ACCESS_KEY_SECRET}
     bucket-name: web-framework-xin
+
+  redis:
+    host: 192.168.139.101
+    port: 6379
+    password: '030130'
+    database: 3
