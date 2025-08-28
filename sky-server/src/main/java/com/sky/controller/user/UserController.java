@@ -51,7 +51,7 @@ public class UserController {
         // 为微信用户生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         // key为用户的id
-        claims.put(JwtClaimsConstant.USER_ID, user.getOpenid());
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),

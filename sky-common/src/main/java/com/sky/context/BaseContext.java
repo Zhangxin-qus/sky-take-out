@@ -3,7 +3,7 @@ package com.sky.context;
 public class BaseContext {
 
     public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
-    private static ThreadLocal<String> userThreadLocal = new ThreadLocal<>();
+    private static ThreadLocal<Long> userThreadLocal = new ThreadLocal<>();
 
     // ====== 员工 ======
     public static void setCurrentId(Long id) {
@@ -19,10 +19,10 @@ public class BaseContext {
     }
 
     // ====== 用户 ======
-    public static void setCurrentUserId(String userId) {
+    public static void setCurrentUserId(Long userId) {
         userThreadLocal.set(userId);
     }
-    public static String getCurrentUserId() {
+    public static Long getCurrentUserId() {
         return userThreadLocal.get();
     }
     public static void removeCurrentUserId() {

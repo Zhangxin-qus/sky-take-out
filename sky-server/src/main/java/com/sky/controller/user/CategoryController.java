@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+// 自定义ioc容器中名称
 @RestController("userCategoryController")
 @RequestMapping("/user/category")
 @Api(tags = "C端-分类接口")
