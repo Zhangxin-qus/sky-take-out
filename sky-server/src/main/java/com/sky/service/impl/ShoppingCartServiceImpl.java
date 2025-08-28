@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.sky.constant.JwtClaimsConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
@@ -9,6 +10,7 @@ import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
+import com.sky.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +83,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
 
+    }
+
+    /**
+     * 查看购物车
+     * @return
+     */
+    @Override
+    public List<ShoppingCart> list() {
+        // 解析出当前的用户id，再查询所有购物车信息
+        Long userId = BaseContext.getCurrentUserId();
+
+        // 已经使用@Accessors(chain = true)开启链式编程
+        List<ShoppingCart> list = shoppingCartMapper.list(new ShoppingCart().setUserId(userId));
+
+        return list;
     }
 }
